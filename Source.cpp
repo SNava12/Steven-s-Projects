@@ -1,78 +1,102 @@
-#include <stdio.h>
-#include <stdint.h>
-#include <assert.h>
+#include <iostream>
+#include <string>
+#include <list>
+#include "Customers.h"
+#include "Manager.h"
+#include "Sales.h"
+#include "SalesList.h"
+#include "Items.h"
+#include "Employee.h"
+#include "ItemsList.h"
+#include "EmpSales.h"
 
 
-typedef uint8_t byte;
-typedef struct
+using namespace std;
+int ItemName;
+int ItemExpirationDate;
+
+
+int main()
 {
-	byte i, j;
-	byte S[256];
-} Rc4State;
+	int Customers = 1;
+	int Manager = 2;
+	int Employee = 3;
+	int Choice;
+	
+	cout << "Welcome to Restaraunt Name " << endl;
+	cout << "Are you a 1.Customer or 2. Manager or 3. Employee?" << endl;
+	cout << "Enter a Number" << endl;
 
-void swap(byte* a, byte* b)
-{
-	byte temp = *a;
-	*a = *b;
-	*b = temp;
-}
+	cin >> Choice;
+	
 
-/*Initialization & initial permutation
-also initialize i&j counters in state for stream generation*/
-void initState(const byte K[256], int keylen, Rc4State* state)
-{
-	byte T[256];
-	assert(keylen >= 1 && keylen <= 256);
-	int i;
-	for (i = 0; i < 256; i++) {
-		state->S[i] = i;
-		T[i] = K[i % keylen];
-	}
-
-	//Initial permutation of S
-	byte* S = state->S;
-	int j = 0;
-	for (i = 0; i < 256; i++) {
-		j = (j + S[i] + T[i]) % 256;
-		swap(&S[i], &S[j]);
-	}
-
-	//Initialize counters in state
-	state->i = state->j = 0;
-}
-
-/*Encrypt/Decrypt text by XORing with next byte of keystream*/
-byte crypt(byte text, Rc4State* state)
-{
-	byte t, k;
-	byte* i = &(state->i), * j = &(state->j);
-	byte* S = state->S;
-	*i = (*i + 1) % 256;
-	*j = (*j + S[*i]) % 256;
-	swap(&S[*i], &S[*j]);
-	t = (S[*i] + S[*j]) % 256;
-	k = S[t];
-
-	return text ^ k;
-}
-
-static byte rc4CryptByte(Rc4State* state, byte plainText)
-{
-	byte* S = state->S;
-	byte i = ++(state->i);
-	byte j = (state->j += S[i]);
-
-	swap(&S[i], &S[j]);
-	byte t = S[i] + S[j];
-	byte k = S[t];
-
-	return plainText ^ k;
-}
-
-void rc4Crypt(Rc4State* state, byte text[], size_t len)
-{
-	for (size_t i = 0; i < len; i++)
+	if ( Choice == 1) // If the User Chooses Customer 
 	{
-		text[i] = rc4CryptByte(state, text[i]);
+		class Customers Customers;
+		Customers.pressEnter();
 	}
+	 if (Choice == 2) // If user Chooses Manager
+	{
+		 class Manager Manager;
+		 Manager.pressEnter();
+		 return 0; // If Manager Enters Wrong Password the Program Ends
+
+		 class Sales Sales; // Manager Update Sales Goal
+		 Sales.pressEnter();
+
+
+	}
+	 if (Choice == 3)
+	 {
+		 class Employee Employee; // If the User chooses Employee
+		 Employee.pressEnter();
+		 cin >> Choice;
+		 
+		 if (Choice == 1) 
+		 {
+			 int Items = 1;
+		     int Sales = 2;
+
+			 cout << "Welcome would you like to 1. Add items or 2. Check items" << endl;
+			 cin >> Choice;
+
+			 if (Choice == 1)
+			 {
+				 class Items Items; // Employee Add Items
+				 Items.pressEnter();
+
+				 class ItemsList ItemsList; // An ItemsList to check and store Item Data
+				 ItemsList.pressEnter();
+			 }
+			 else if (Choice ==2 )
+			 {
+				 cout << "Here are the items!" << endl;
+				 
+				 class ItemsList ItemsList; 
+				 ItemsList.pressEnter();
+
+				 return 0;
+			 }
+
+		 }
+		 if (Choice ==2)
+		 {
+			 int AddSales = 1;
+			 int CheckSales = 2;
+
+			 cout << "Welcome would you like to 1. Add sales or 2. Check sales." << endl;
+			 cin >> Choice;
+
+			 if (Choice == 1) 
+			 {
+				 class EmpSales EmpSales; // Employee Adding into Sales
+				 EmpSales.pressEnter();
+			 }
+			 else if (Choice == 2)
+			 {
+				 class SalesList SalesList; // Employees checking the sales goal
+				 SalesList.pressEnter();
+			 }
+		 }
+	 }
 }
